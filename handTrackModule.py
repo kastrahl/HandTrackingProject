@@ -3,6 +3,7 @@ import mediapipe as mp
 import time
 import math
 
+
 class handDetector():
 
     def __init__(self, mode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
@@ -30,7 +31,7 @@ class handDetector():
         xList = []
         yList = []
         bbox = []
-        lmList = []
+        self.lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
             for id, lm in enumerate(myHand.landmark):
@@ -40,7 +41,7 @@ class handDetector():
                 xList.append(cx)
                 yList.append(cy)
                 # print(id, cx, cy)
-                lmList.append([id, cx, cy])
+                self.lmList.append([id, cx, cy])
                 if draw:
                     cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
                 xmin, xmax = min(xList), max(xList)
@@ -48,7 +49,7 @@ class handDetector():
                 bbox = xmin, ymin, xmax, ymax
                 # if draw:
                 #     cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
-        return lmList, bbox
+        return self.lmList
 
     def fingersUp(self):
         fingers = []
@@ -77,6 +78,7 @@ class handDetector():
             length = math.hypot(x2 - x1, y2 - y1)
         return length, img, [x1, y1, x2, y2, cx, cy]
 
+
 def main():
     pTime = 0
     cap = cv2.VideoCapture(0)
@@ -86,7 +88,7 @@ def main():
         img = detector.findHands(img)
         lmList = detector.findPosition(img)
         if len(lmList) != 0:
-            print(lmList[2])
+            print(lmList[4])
 
         cTime = time.time()
         fps = 1 / (cTime - pTime)
@@ -96,6 +98,7 @@ def main():
         key = cv2.waitKey(1)
         if key == ord('q'):
             break
+
 
 if __name__ == "__main__":
     main()
