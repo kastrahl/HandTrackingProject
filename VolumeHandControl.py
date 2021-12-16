@@ -27,6 +27,7 @@ cap.set(4, hCam)
 pTime = 0
 vol = 0
 volBar = 400  # first initialise value should be 0 which is 400 pixel
+volPer = 0
 detector = htm.handDetector(detectionCon=0.7)
 
 while True:
@@ -54,21 +55,43 @@ while True:
         vol = np.interp(length, [50, 250], [minVol, maxVol])  # normalising volume to range
         volBar = np.interp(length, [50, 250],
                            [400, 150])  # vol for bar becasue else range to big and goes out of window
+        volPer = np.interp(length, [50, 250], [0, 100]) # for volume percentage 0 - 100
         print(int(length), vol)
         volume.SetMasterVolumeLevel(vol, None)
         if length < 50:
             cv2.circle(img, (cx, cy), 10, (0, 255, 255), cv2.FILLED)
 
-    cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
+    cv2.rectangle(img, (50, int(volBar)), (80, 400), (0, 255, 0), cv2.FILLED)
+    cv2.putText(img, f'{int(volPer)}%', (40, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 3)
+
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
 
-    cv2.putText(img, f'FPS: {int(fps)}', (40, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 3)
+    cv2.putText(img, f'FPS: {int(fps)}', (40, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 3)
     cv2.imshow("img", img)
     key = cv2.waitKey(1)
     if key == ord('q'):
         break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """
 ################################
